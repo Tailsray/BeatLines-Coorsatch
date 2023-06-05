@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://bwwd1v0lgn27r"]
+
+[ext_resource type="Script" path="res://Conductor.cs" id="1_anu4r"]
+[ext_resource type="Script" path="res://InputProcessor.cs" id="3_24464"]
+[ext_resource type="Script" path="res://StateMachine.cs" id="3_qg4xp"]
+[ext_resource type="Script" path="res://MusicSource.cs" id="4_ubawb"]
+[ext_resource type="AudioStream" uid="uid://b7ftun8wsf2cc" path="res://Music/Stay.mp3" id="5_h44qe"]
+[ext_resource type="AudioStream" uid="uid://d3a8c6duuncoy" path="res://Music/Click.mp3" id="6_ld0dr"]
+[ext_resource type="Script" path="res://APFCIndicator.cs" id="7_u3nn2"]
+
+[node name="Conductor" type="Node2D"]
+script = ExtResource("1_anu4r")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("3_qg4xp")
+
+[node name="InputProcessor" type="Node" parent="."]
+script = ExtResource("3_24464")
+
+[node name="MusicSource" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_h44qe")
+volume_db = -5.0
+script = ExtResource("4_ubawb")
+
+[node name="Clicker" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ld0dr")
+volume_db = 10.0
+max_polyphony = 10
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 363.0
+offset_top = 25.0
+offset_right = 780.0
+offset_bottom = 154.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 80
+text = "0"
+horizontal_alignment = 2
+
+[node name="SpeedLabel" type="Label" parent="."]
+offset_left = 468.0
+offset_top = 141.0
+offset_right = 784.0
+offset_bottom = 270.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 50
+text = "Speed: 1"
+horizontal_alignment = 2
+
+[node name="APFCIndicator" type="Node2D" parent="."]
+position = Vector2(400, 400)
+script = ExtResource("7_u3nn2")
