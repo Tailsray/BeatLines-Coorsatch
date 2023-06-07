@@ -80,30 +80,32 @@ public partial class Conductor : Node2D
 								
 			}
 
-			if (t[0] != "N") continue;
-			var note = noteScene.Instantiate<Note>();
-			AddChild(note);
-
-			note.NoteHit += OnNoteHit;
-
-			note.Path1ID = index;
-
-			if (t.Count == 4)
+			if (t[0] == "N")
 			{
-				note.Path2ID = int.Parse(t[2]);
-				note.MyTime = double.Parse(t[3]);
-				note.TapsToGo = 2;
-				MaxScore += 4;
-			}
-			else
-			{
-				note.Path2ID = 0;
-				note.MyTime = double.Parse(t[2]);
-				note.TapsToGo = 1;
-				MaxScore += 2;
-			}
+				var note = noteScene.Instantiate<Note>();
+				AddChild(note);
 
-			note.InitReferences(SM, MS);
+				note.NoteHit += OnNoteHit;
+
+				note.Path1ID = index;
+
+				if (t.Count == 4)
+				{
+					note.Path2ID = int.Parse(t[2]);
+					note.MyTime = double.Parse(t[3]);
+					note.TapsToGo = 2;
+					MaxScore += 4;
+				}
+				else
+				{
+					note.Path2ID = 0;
+					note.MyTime = double.Parse(t[2]);
+					note.TapsToGo = 1;
+					MaxScore += 2;
+				}
+
+				note.InitReferences(SM, MS);
+			}
 		}
 
 		EmitSignal(SignalName.ChartIsRead);
