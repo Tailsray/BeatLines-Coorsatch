@@ -25,11 +25,13 @@ public partial class Game : Node
 			GetTree().Paused = !(GetTree().Paused);
 		}
 
-		if (!Input.IsActionJustPressed("debug_jump")) return;
-		var jump = new JumpToBeat();
-		jump.Position = new Vector2(350, 100);
-		AddChild(jump);
-		//GetTree().Paused = true;
+		if (Input.IsActionJustPressed("debug_jump"))
+		{
+			var jump = new JumpToBeat();
+			jump.Position = new Vector2(350, 100);
+			AddChild(jump);
+			//GetTree().Paused = true;
+		}
 
 		
 	}
