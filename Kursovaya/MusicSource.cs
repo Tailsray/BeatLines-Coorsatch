@@ -12,7 +12,7 @@ public partial class MusicSource : AudioStreamPlayer
 
     public override void _Process(double delta)
     {
-		CurrentTime = (GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() - AudioServer.GetOutputLatency()) / 60f * BPM;
+		CurrentTime = (GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() - AudioServer.GetOutputLatency()) / 60.0 * BPM;
         GetTree().CallGroup("paths", "UpdateTime", CurrentTime);
     }
 }
