@@ -4,7 +4,7 @@ public partial class ComboSplash : Label
 {
 	public string Grade { get; set; }
 	public string Combo { get; set; }
-	public string Timing { get; set; }
+	private string Timing { get; set; }
 	int frames { get; set; }
 
 	public override void _Ready()
@@ -13,18 +13,23 @@ public partial class ComboSplash : Label
 		Text = $"{Timing}{Grade}{Combo}";
 
 		AddThemeConstantOverride("outline_size", 8);
-		if (Grade == "NICE")
-			AddThemeColorOverride("font_color", Colors.SpringGreen);
-		if (Grade == "OFF")
-			AddThemeColorOverride("font_color", Colors.BlueViolet);
-		if (Grade == "BAD")
-			AddThemeColorOverride("font_color", Colors.PaleVioletRed);
-
+		switch (Grade)
+		{
+			case "NICE":
+				AddThemeColorOverride("font_color", Colors.SpringGreen);
+				break;
+			case "OFF":
+				AddThemeColorOverride("font_color", Colors.BlueViolet);
+				break;
+			case "BAD":
+				AddThemeColorOverride("font_color", Colors.PaleVioletRed);
+				break;
+		}
 	}
 
 	public override void _Process(double delta)
 	{
-		if (frames < 10 || frames > 20)
+		if (frames is < 10 or > 20)
 			Position += new Vector2(0, -10);
 
 		if (frames > 20)

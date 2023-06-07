@@ -8,11 +8,11 @@ public partial class Conductor : Node2D
 	public delegate void ChartIsReadEventHandler();
 
 	int PathIDCounter { get; set; }
-	public uint ExScore { get; set; }
-	public uint MaxScore { get; set; }
-	public uint NiceCount { get; set;}
-	public uint OffCount { get; set;}
-	public uint BadCount { get; set;}
+	private uint ExScore { get; set; }
+	private uint MaxScore { get; set; }
+	private uint NiceCount { get; set;}
+	private uint OffCount { get; set;}
+	private uint BadCount { get; set;}
 	uint Score { get; set; }
 	uint Combo { get; set; }
 	string chartPath = "res://Charts/Stay3.chrt";
@@ -51,20 +51,20 @@ public partial class Conductor : Node2D
 			chart.Add(new List<string>(chartFile.GetLine().Split(" ", 
 								StringSplitOptions.RemoveEmptyEntries)));
 
-		for (int i = 0; i < chart.Count; i++)
+		foreach (var t in chart)
 		{
-			int index = Convert.ToInt32(chart[i][1]);
+			var index = Convert.ToInt32(t[1]);
 
-			if (chart[i][0] == "BPM")
-				MS.BPM = Single.Parse(chart[i][1]);
+			if (t[0] == "BPM")
+				MS.BPM = float.Parse(t[1]);
 
-			if (chart[i][0] == "P")
+			if (t[0] == "P")
 			{
 				if (index > PathIDCounter)
 				{
 					SM.AddNewIndex();
 
-					Path path = pathScene.Instantiate<Path>();
+					var path = pathScene.Instantiate<Path>();
 					AddChild(path);
 
 					PathIDCounter++;
@@ -72,40 +72,38 @@ public partial class Conductor : Node2D
 					path.InitStates(SM);
 				}
 
-				SM.AddState(Int32.Parse(chart[i][1]),
-							new StateMachine.State(
-								Double.Parse(chart[i][2]),
-								Single.Parse(chart[i][3]),
-								chart[i][4]));
+				SM.AddState(int.Parse(t[1]),
+					new StateMachine.State(
+						double.Parse(t[2]),
+						float.Parse(t[3]),
+						t[4]));
 								
 			}
 
-			if (chart[i][0] == "N")
+			if (t[0] != "N") continue;
+			var note = noteScene.Instantiate<Note>();
+			AddChild(note);
+
+			note.NoteHit += OnNoteHit;
+
+			note.Path1ID = index;
+
+			if (t.Count == 4)
 			{
-				Note note = noteScene.Instantiate<Note>();
-				AddChild(note);
-
-				note.NoteHit += OnNoteHit;
-
-				note.Path1ID = index;
-
-				if (chart[i].Count == 4)
-				{
-					note.Path2ID = Int32.Parse(chart[i][2]);
-					note.MyTime = Double.Parse(chart[i][3]);
-					note.TapsToGo = 2;
-					MaxScore += 4;
-				}
-				else
-				{
-					note.Path2ID = 0;
-					note.MyTime = Double.Parse(chart[i][2]);
-					note.TapsToGo = 1;
-					MaxScore += 2;
-				}
-
-				note.InitReferences(SM, MS);
+				note.Path2ID = int.Parse(t[2]);
+				note.MyTime = double.Parse(t[3]);
+				note.TapsToGo = 2;
+				MaxScore += 4;
 			}
+			else
+			{
+				note.Path2ID = 0;
+				note.MyTime = double.Parse(t[2]);
+				note.TapsToGo = 1;
+				MaxScore += 2;
+			}
+
+			note.InitReferences(SM, MS);
 		}
 
 		EmitSignal(SignalName.ChartIsRead);
@@ -142,7 +140,7 @@ public partial class Conductor : Node2D
 		Score = 1000000 * ExScore / MaxScore;
 		ScoreLabel.Text = Score.ToString();
 
-		ComboSplash splash = splaScene.Instantiate<ComboSplash>();
+		var splash = splaScene.Instantiate<ComboSplash>();
 		switch (Grade)
 		{
 			case 2:
@@ -196,13 +194,19 @@ public partial class Conductor : Node2D
 
 		indicator.SetIndicators(0);
 
-		Label Splash = new Label();
-		if (Score == 1000000)
-			DisplayCentered("ALL NICE!", Colors.Yellow, 320, 120, 20);
-		else if (Score >= 700000)
-			DisplayCentered("CLEARED!", Colors.White, 320, 120, 20);
-		else
-			DisplayCentered("FAILED...!", Colors.Crimson, 320, 120, 20);
+		
+		switch (Score)
+		{
+			case 1000000:
+				DisplayCentered("ALL NICE!", Colors.Yellow, 320, 120, 20);
+				break;
+			case >= 700000:
+				DisplayCentered("CLEARED!", Colors.White, 320, 120, 20);
+				break;
+			default:
+				DisplayCentered("FAILED...!", Colors.Crimson, 320, 120, 20);
+				break;
+		}
 
 		DisplayCentered($"NICE: {NiceCount}", Colors.SpringGreen, 500, 40, 12);
 		DisplayCentered($"OFF: {OffCount}", Colors.DodgerBlue, 560, 40, 12);

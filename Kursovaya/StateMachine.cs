@@ -72,30 +72,21 @@ public partial class StateMachine : Node
 
 	public float getX(int index, double time)
 	{
-		List<State> s = states[index - 1];
+		var s = states[index - 1];
 
-		if (time >= s[0].t && time <= s[s.Count - 1].t)
+		if (!(time >= s[0].t) || !(time <= s[^1].t)) return -1000;
+		int i = 0;
+		while (time > s[i + 1].t) i++;
+		if (s[i].type == CurveType.End) i++;
+
+		var a = (float)(time - s[i].t) / (float)(s[i + 1].t - s[i].t);
+		return s[i].type switch
 		{
-			int i = 0;
-			while (time > s[i + 1].t) i++;
-			if (s[i].type == CurveType.End) i++;
-
-			float a = (float)(time - s[i].t) / (float)(s[i + 1].t - s[i].t);
-			switch (s[i].type)
-			{
-				case CurveType.Straight:
-					return s[i].pos + (s[i + 1].pos - s[i].pos)
-											   * a;
-				case CurveType.CircleDecel:
-					return s[i].pos + (s[i + 1].pos - s[i].pos) *
-											   Mathf.Sin(Mathf.Pi / 2 * a);
-				case CurveType.CircleAccel:
-					return s[i].pos + (s[i + 1].pos - s[i].pos) *
-											   (1 - Mathf.Cos(Mathf.Pi / 2 * a));
-			}
-		}
-
-		return -1000;
+			CurveType.Straight => s[i].pos + (s[i + 1].pos - s[i].pos) * a,
+			CurveType.CircleDecel => s[i].pos + (s[i + 1].pos - s[i].pos) * Mathf.Sin(Mathf.Pi / 2 * a),
+			CurveType.CircleAccel => s[i].pos + (s[i + 1].pos - s[i].pos) * (1 - Mathf.Cos(Mathf.Pi / 2 * a)),
+			_ => -1000
+		};
 	}
 
 	public float getY(double t)

@@ -3,7 +3,7 @@ using Godot;
 public partial class Game : Node
 {
 	StateMachine SM;
-
+	private retryButton _retryButton = new retryButton();
 	public override void _Ready()
 	{
 		SM = GetNode<StateMachine>("Conductor/StateMachine");
@@ -17,16 +17,20 @@ public partial class Game : Node
 		
 		if (Input.IsActionJustPressed("restart"))
 			GetTree().ReloadCurrentScene();
-			
-		if (Input.IsActionJustPressed("pause"))
-			GetTree().Paused = !(GetTree().Paused);
 
-		if (Input.IsActionJustPressed("debug_jump"))
+		if (Input.IsActionJustPressed("pause"))
 		{
-			//GetTree().Paused = true;
-			JumpToBeat jump = new JumpToBeat();
-			jump.Position = new Vector2(350, 100);
-			AddChild(jump);
+			GetNode<CanvasModulate>("pauseBackground").Visible = !GetNode<CanvasModulate>("pauseBackground").Visible;
+			GetNode<retryButton>("retryButton").Visible = !GetNode<retryButton>("retryButton").Visible;
+			GetTree().Paused = !(GetTree().Paused);
 		}
+
+		if (!Input.IsActionJustPressed("debug_jump")) return;
+		var jump = new JumpToBeat();
+		jump.Position = new Vector2(350, 100);
+		AddChild(jump);
+		//GetTree().Paused = true;
+
+		
 	}
 }

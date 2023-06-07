@@ -73,7 +73,7 @@ public partial class Note : Sprite2D
 		}
 		else
 		{
-			float x2 = SM.getX(Path2ID, MyTime) - SM.getX(Path1ID, MyTime);
+			var x2 = SM.getX(Path2ID, MyTime) - SM.getX(Path1ID, MyTime);
 
 			DrawCircle(new Vector2(), 25, Colors.Gold);
 			DrawCircle(new Vector2(), 22, Colors.Black);
