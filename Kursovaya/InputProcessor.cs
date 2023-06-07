@@ -14,7 +14,7 @@ public partial class InputProcessor : Node
 		}
 		else
 		{
-			Node nextNote = GetTree().GetNodesInGroup("notes")[0];
+			var nextNote = GetTree().GetNodesInGroup("notes")[0];
 
 			if (Input.IsActionJustPressed("key1"))
 				nextNote.Call("Pressed");

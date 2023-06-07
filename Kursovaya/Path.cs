@@ -49,18 +49,18 @@ public partial class Path : Node2D
 
 	public override void _Draw()
 	{
-		for (int i = (Mathf.Clamp(currentState - 5,  0, states.Count - 1));
-				 i < (Mathf.Clamp(currentState + 20, 0, states.Count - 1));
-				 i++)
+		for (var i = (Mathf.Clamp(currentState - 5,  0, states.Count - 1));
+			 i < (Mathf.Clamp(currentState + 20, 0, states.Count - 1));
+			 i++)
 			if (states[i].type != StateMachine.CurveType.End)
 				DrawChartLine(states[i].t, states[i + 1].t);
 	}
 
 	public void DrawChartLine(double t1, double t2)
 	{
-		for (int i = 0; i < points.Length; i++)
+		for (var i = 0; i < points.Length; i++)
 		{
-			double ti = t1 + i / 30f * (t2 - t1);
+			var ti = t1 + i / 30.0 * (t2 - t1);
 			points[i] = new Vector2(SM.getX(MyID, ti), SM.getY(ti - CurrentTime));
 		}
 		DrawPolyline(points, Colors.Red, 5, true);
