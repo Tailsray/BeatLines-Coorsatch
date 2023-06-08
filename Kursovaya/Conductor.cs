@@ -32,6 +32,8 @@ public partial class Conductor : Node2D
 
 	async public override void _Ready()
 	{
+		AddToGroup("conductor");
+
 		noteScene = ResourceLoader.Load<PackedScene>("res://Note.tscn");
 		pathScene = ResourceLoader.Load<PackedScene>("res://Path.tscn");
 		splaScene = ResourceLoader.Load<PackedScene>("res://ComboSplash.tscn");
@@ -122,6 +124,11 @@ public partial class Conductor : Node2D
 		// MS.Seek(156 * 60f / MS.BPM);
 	}
 
+	public void JumpToBeat(double beat)
+	{
+		MS.Play((float)beat * 60f / MS.BPM);
+	}
+
 	public override void _UnhandledInput(InputEvent ev)
 	{
 		if (Input.IsActionJustPressed("speed_up"))
@@ -165,7 +172,7 @@ public partial class Conductor : Node2D
 			Combo = 0;
 		splash.Combo = (Combo > 1 ? $" {Combo.ToString()}" : "");
 
-		splash.Position = new Vector2(pos, 580f);
+		splash.InitPos = new Vector2(pos, 560f);
 
 		AddChild(splash);
 

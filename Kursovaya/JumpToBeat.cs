@@ -3,16 +3,26 @@ using System;
 
 public partial class JumpToBeat : SpinBox
 {
-	public void _UnhandledInput(InputEventKey ev)
+	public override void _Ready()
 	{
-		if (ev.Keycode == Key.Enter)
+		ProcessMode = ProcessModeEnum.WhenPaused;
+	}
+
+	public override void _Process(double delta)
+	{
+		
+	}
+
+	public override void _UnhandledInput(InputEvent ev)
+	{
+		if (ev is InputEventKey key && key.Keycode == Key.Enter)
 			Value = Single.Parse(GetLineEdit().Text);
 	}
-	public void OnValueChanged(float value)
+
+	public void OnValueChanged(double value)
 	{
-		GD.Print("hey");
-		GetNode<MusicSource>("../Conductor/MusicSource").Seek(value);
 		GetTree().Paused = false;
-		QueueFree();
+		GetParent<Game>().ReloadConductor(value);		
+		Visible = false;
 	}
 }
