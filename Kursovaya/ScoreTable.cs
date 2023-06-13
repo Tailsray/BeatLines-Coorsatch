@@ -6,7 +6,24 @@ public partial class ScoreTable : Label
 	List<int> Scores { get; set; }
 	int CurrentScore { get; set; }
 	int MaxScore { get; set; }
-
+	double finalScore { get; set; }
+	int prevScore { get; set; }
+	double lastNoteTiming { get; set; }
+	MusicSource MS;
+	public void InitReferences(MusicSource _ms)
+	{
+		MS = _ms;
+	}
+	public void OnNoteHit(int kek, float rofl) 
+	{
+		if(kek != 3)
+		{
+			prevScore = CurrentScore;
+			
+			lastNoteTiming = (double)GetTree().GetNodesInGroup("notes")[0].Call("GetTiming");
+			
+		}
+	}
 	public override void _Ready()
 	{
 		Scores = new List<int> {0, 0, 0, 0, 0, 0, 0, 0};
@@ -22,25 +39,25 @@ public partial class ScoreTable : Label
 	public void UpdateScore(int score)
 	{
 		CurrentScore = score;
+		
+		if(1 - Mathf.Pow(1 - (MS.CurrentTime - lastNoteTiming), 3) <= 1)
+		{
+		finalScore = prevScore + ((1 - Mathf.Pow(1 - (MS.CurrentTime - lastNoteTiming), 3))) * (CurrentScore - prevScore);
+		}
+		
+		
 	}
 
-	public double Score()
+	public int Score()
 	{
-		return Mathf.FloorToInt((Scores[0] * 0.05 +
-								 Scores[1] * 0.10 +
-								 Scores[2] * 0.20 +
-								 Scores[3] * 0.35 +
-								 Scores[4] * 0.55 +
-								 Scores[5] * 0.90 +
-								 Scores[6] * 2.00 +
-								 Scores[7] * 3.85) / MaxScore * 125000);
+		return Mathf.FloorToInt(finalScore / MaxScore * 1000000);
 	}
 
 	public override void _Process(double delta)
 	{
 		Scores.RemoveAt(0);
 		Scores.Add(CurrentScore);
-
 		Text = Score().ToString();
+		
 	}
 }

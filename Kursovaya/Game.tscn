@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dsy5c7yu8lpju"]
+[gd_scene load_steps=7 format=3 uid="uid://dsy5c7yu8lpju"]
 
 [ext_resource type="Script" path="res://Game.cs" id="1_c1mcu"]
 [ext_resource type="Texture2D" uid="uid://cfjaawy6sbacy" path="res://refresh.png" id="2_etesx"]
 [ext_resource type="Texture2D" uid="uid://dods2eunxwjdw" path="res://Covers/StayBlurred.jpg" id="2_v73hu"]
 [ext_resource type="Script" path="res://retryButton.cs" id="3_3rlhy"]
 [ext_resource type="PackedScene" uid="uid://b2f12djjqusn5" path="res://JumpToBeat.tscn" id="5_vobls"]
+[ext_resource type="Script" path="res://iufhsagiufds.cs" id="6_1chj4"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_c1mcu")
@@ -49,3 +50,9 @@ script = ExtResource("3_3rlhy")
 
 [node name="JumpToBeat" parent="." instance=ExtResource("5_vobls")]
 visible = false
+
+[node name="iufhsagiufds" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 48
+script = ExtResource("6_1chj4")

@@ -10,10 +10,13 @@ public partial class Note : Sprite2D
 	public double MyTime { get; set; }
 	public int TapsToGo { get; set; }
 	int Grade { get; set; }
-	double timing { get; set; }
+	public double timing { get; set; }
 	MusicSource MS;
 	StateMachine SM;
-
+	double pressedTiming { get; set; }
+	public double GetTiming() {
+		return pressedTiming;
+	}
 	public void InitReferences(StateMachine _sm, MusicSource _ms)
 	{
 		SM = _sm;
@@ -24,6 +27,7 @@ public partial class Note : Sprite2D
 	{
 		if (Mathf.Abs(timing) <= 0.13)
 		{
+			pressedTiming = MS.CurrentTime;
 			Grade = Grade < GetGrade() ? Grade : GetGrade();
 			Hit(Grade);
 		}
@@ -49,8 +53,8 @@ public partial class Note : Sprite2D
 		Grade = 3;
 	}
 
-    public override void _Process(double delta)
-    {
+	public override void _Process(double delta)
+	{
 		timing = (MS.CurrentTime - MyTime) * 60 / MS.BPM;
 
 		if (timing > 0.13)
@@ -60,15 +64,15 @@ public partial class Note : Sprite2D
 			Hit(3);
 		}
 
-        Position = new Vector2(SM.getX(Path1ID, MyTime),
+		Position = new Vector2(SM.getX(Path1ID, MyTime),
 							   SM.getY(MyTime - MS.CurrentTime));
-    }
+	}
 
-    public override void _Draw()
-    {
+	public override void _Draw()
+	{
 		if (Path2ID == 0)
 		{
-        	DrawCircle(new Vector2(), 25, Colors.Black);
+			DrawCircle(new Vector2(), 25, Colors.Black);
 			DrawCircle(new Vector2(), 15, Colors.SpringGreen);
 		}
 		else
@@ -83,5 +87,5 @@ public partial class Note : Sprite2D
 			DrawCircle(new Vector2(x2, 0), 22, Colors.Black);
 			DrawCircle(new Vector2(x2, 0), 15, Colors.SpringGreen);
 		}
-    }
+	}
 }

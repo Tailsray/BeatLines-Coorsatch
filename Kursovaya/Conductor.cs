@@ -85,9 +85,8 @@ public partial class Conductor : Node2D
 			{
 				var note = noteScene.Instantiate<Note>();
 				AddChild(note);
-
+				note.NoteHit += ST.OnNoteHit;
 				note.NoteHit += OnNoteHit;
-
 				note.Path1ID = index;
 
 				if (t.Count == 4)
@@ -108,7 +107,7 @@ public partial class Conductor : Node2D
 				note.InitReferences(SM, MS);
 			}
 		}
-
+		ST.InitReferences(MS);
 		ST.SetMaxScore(MaxScore);
 
 		IP = GetNode<InputProcessor>("InputProcessor");
