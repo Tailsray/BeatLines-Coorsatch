@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dsy5c7yu8lpju"]
 
 [ext_resource type="Script" path="res://Game.cs" id="1_c1mcu"]
-[ext_resource type="PackedScene" uid="uid://bwwd1v0lgn27r" path="res://Conductor.tscn" id="1_gv363"]
 [ext_resource type="Texture2D" uid="uid://cfjaawy6sbacy" path="res://refresh.png" id="2_etesx"]
 [ext_resource type="Texture2D" uid="uid://dods2eunxwjdw" path="res://Covers/StayBlurred.jpg" id="2_v73hu"]
 [ext_resource type="Script" path="res://retryButton.cs" id="3_3rlhy"]
+[ext_resource type="PackedScene" uid="uid://b2f12djjqusn5" path="res://JumpToBeat.tscn" id="5_vobls"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_c1mcu")
@@ -16,15 +16,16 @@ offset_bottom = 800.0
 texture = ExtResource("2_v73hu")
 expand_mode = 4
 
-[node name="Conductor" parent="." instance=ExtResource("1_gv363")]
-
-[node name="pauseBackground" type="CanvasModulate" parent="."]
+[node name="PauseBackground" type="ColorRect" parent="."]
 visible = false
-color = Color(0.529412, 0.529412, 0.529412, 1)
+offset_right = 800.0
+offset_bottom = 800.0
+color = Color(0, 0, 0, 0.498039)
 
 [node name="retryButton" type="TextureButton" parent="."]
 visible = false
 top_level = true
+z_index = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -36,6 +37,7 @@ offset_right = 64.0
 offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
+disabled = true
 action_mode = 0
 texture_normal = ExtResource("2_etesx")
 texture_pressed = ExtResource("2_etesx")
@@ -44,3 +46,6 @@ texture_focused = ExtResource("2_etesx")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("3_3rlhy")
+
+[node name="JumpToBeat" parent="." instance=ExtResource("5_vobls")]
+visible = false
