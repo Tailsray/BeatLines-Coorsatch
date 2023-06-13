@@ -75,7 +75,7 @@ public partial class Conductor : Node2D
 
 				SM.AddState(int.Parse(t[1]),
 					new StateMachine.State(
-						double.Parse(t[2]),
+						double.Parse(t[2], System.Globalization.CultureInfo.InvariantCulture),
 						float.Parse(t[3]),
 						t[4]));
 								
@@ -93,14 +93,14 @@ public partial class Conductor : Node2D
 				if (t.Count == 4)
 				{
 					note.Path2ID = int.Parse(t[2]);
-					note.MyTime = double.Parse(t[3]);
+					note.MyTime = double.Parse(t[3], System.Globalization.CultureInfo.InvariantCulture);
 					note.TapsToGo = 2;
 					MaxScore += 4;
 				}
 				else
 				{
 					note.Path2ID = 0;
-					note.MyTime = double.Parse(t[2]);
+					note.MyTime = double.Parse(t[2], System.Globalization.CultureInfo.InvariantCulture);
 					note.TapsToGo = 1;
 					MaxScore += 2;
 				}
