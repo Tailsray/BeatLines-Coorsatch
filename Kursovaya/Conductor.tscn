@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwwd1v0lgn27r"]
+[gd_scene load_steps=9 format=3 uid="uid://bwwd1v0lgn27r"]
 
 [ext_resource type="Script" path="res://Conductor.cs" id="1_anu4r"]
 [ext_resource type="Script" path="res://InputProcessor.cs" id="3_24464"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://b7ftun8wsf2cc" path="res://Music/Stay.mp3" id="5_h44qe"]
 [ext_resource type="AudioStream" uid="uid://d3a8c6duuncoy" path="res://Music/Click.mp3" id="6_ld0dr"]
 [ext_resource type="Script" path="res://APFCIndicator.cs" id="7_u3nn2"]
+[ext_resource type="Script" path="res://ScoreTable.cs" id="7_xx0hn"]
 
 [node name="Conductor" type="Node2D"]
 script = ExtResource("1_anu4r")
@@ -27,7 +28,7 @@ stream = ExtResource("6_ld0dr")
 volume_db = 10.0
 max_polyphony = 10
 
-[node name="ScoreLabel" type="Label" parent="."]
+[node name="ScoreTable" type="Label" parent="."]
 offset_left = 363.0
 offset_top = 25.0
 offset_right = 780.0
@@ -37,6 +38,7 @@ theme_override_constants/outline_size = 15
 theme_override_font_sizes/font_size = 80
 text = "0"
 horizontal_alignment = 2
+script = ExtResource("7_xx0hn")
 
 [node name="SpeedLabel" type="Label" parent="."]
 offset_left = 468.0

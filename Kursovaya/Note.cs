@@ -3,13 +3,13 @@ using Godot;
 public partial class Note : Sprite2D
 {
 	[Signal]
-	public delegate void NoteHitEventHandler(uint deltascore, float pos);
+	public delegate void NoteHitEventHandler(int deltascore, float pos);
 
 	public int Path1ID { get; set; }
 	public int Path2ID { get; set; }
 	public double MyTime { get; set; }
 	public int TapsToGo { get; set; }
-	uint Grade { get; set; }
+	int Grade { get; set; }
 	double timing { get; set; }
 	MusicSource MS;
 	StateMachine SM;
@@ -29,7 +29,7 @@ public partial class Note : Sprite2D
 		}
 	}
 
-	void Hit(uint grade)
+	void Hit(int grade)
 	{
 		if (--TapsToGo >= 0)
 			EmitSignal("NoteHit", grade, SM.getX((TapsToGo == 0 ? Path1ID : Path2ID), MyTime));
@@ -37,10 +37,10 @@ public partial class Note : Sprite2D
 			QueueFree();
 	}
 
-	uint GetGrade()
+	int GetGrade()
 	{
-		return (Mathf.Abs(timing) <= 0.05 ? 1u : 0)
-			 + (Mathf.Abs(timing) <= 0.09 ? 1u : 0);
+		return (Mathf.Abs(timing) <= 0.05 ? 1 : 0)
+			 + (Mathf.Abs(timing) <= 0.09 ? 1 : 0);
 	}
 
 	public override void _Ready()

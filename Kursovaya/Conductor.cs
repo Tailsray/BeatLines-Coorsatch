@@ -8,19 +8,18 @@ public partial class Conductor : Node2D
 	public delegate void ChartIsReadEventHandler();
 
 	int PathIDCounter { get; set; }
-	private uint ExScore { get; set; }
-	private uint MaxScore { get; set; }
-	private uint NiceCount { get; set;}
-	private uint OffCount { get; set;}
-	private uint BadCount { get; set;}
-	uint Score { get; set; }
-	uint Combo { get; set; }
+	int MaxScore { get; set; }
+	int NiceCount { get; set;}
+	int OffCount { get; set;}
+	int BadCount { get; set;}
+	int Score { get; set; }
+	int Combo { get; set; }
 	string chartPath = "res://Charts/Stay3.chrt";
 	List<List<string>> chart;
 	StateMachine SM;
 	InputProcessor IP;
 	MusicSource MS;
-	Label ScoreLabel;
+	ScoreTable ST;
 	Label SpeedLabel;
 	AudioStreamPlayer Clicker;
 	APFCIndicator indicator;
@@ -42,7 +41,7 @@ public partial class Conductor : Node2D
 
 		SM = GetNode<StateMachine>("StateMachine");
 		MS = GetNode<MusicSource>("MusicSource");
-		ScoreLabel = GetNode<Label>("ScoreLabel");
+		ST = GetNode<ScoreTable>("ScoreTable");
 		SpeedLabel = GetNode<Label>("SpeedLabel");
 		Clicker = GetNode<AudioStreamPlayer>("Clicker");
 		indicator = GetNode<APFCIndicator>("APFCIndicator");
@@ -110,7 +109,7 @@ public partial class Conductor : Node2D
 			}
 		}
 
-		EmitSignal(SignalName.ChartIsRead);
+		ST.SetMaxScore(MaxScore);
 
 		IP = GetNode<InputProcessor>("InputProcessor");
 		IP.ChartOver += WinSplash;
@@ -122,6 +121,11 @@ public partial class Conductor : Node2D
 
 		// DEBUG - DELETE LATER
 		// MS.Seek(156 * 60f / MS.BPM);
+	}
+
+	public override void _Process(double delta)
+	{
+		ST.UpdateScore(Score);
 	}
 
 	public void JumpToBeat(double beat)
@@ -140,14 +144,12 @@ public partial class Conductor : Node2D
 		SpeedLabel.Text = $"Speed: {SM.Speed}";
 	}
 
-	public void OnNoteHit(uint Grade, float pos)
+	public void OnNoteHit(int Grade, float pos)
 	{
 		if (Grade != 3)
 			Clicker.Play();
 
-		ExScore += Grade - (Grade == 3 ? 3u : 0);
-		Score = 1000000 * ExScore / MaxScore;
-		ScoreLabel.Text = Score.ToString();
+		Score += Grade - (Grade == 3 ? 3 : 0);
 
 		var splash = splaScene.Instantiate<ComboSplash>();
 		switch (Grade)
@@ -204,7 +206,7 @@ public partial class Conductor : Node2D
 		indicator.SetIndicators(0);
 
 		
-		switch (Score)
+		switch (ST.Score())
 		{
 			case 1000000:
 				DisplayCentered("ALL NICE!", Colors.Yellow, 320, 120, 20);
