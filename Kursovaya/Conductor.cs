@@ -107,7 +107,7 @@ public partial class Conductor : Node2D
 				note.InitReferences(SM, MS);
 			}
 		}
-		ST.InitReferences(MS);
+
 		ST.SetMaxScore(MaxScore);
 
 		IP = GetNode<InputProcessor>("InputProcessor");
@@ -117,14 +117,11 @@ public partial class Conductor : Node2D
 					   SceneTreeTimer.SignalName.Timeout);
 
 		MS.Play();
-
-		// DEBUG - DELETE LATER
-		// MS.Seek(156 * 60f / MS.BPM);
 	}
 
 	public override void _Process(double delta)
 	{
-		ST.UpdateScore(Score);
+		ST.UpdateScore(MS.CurrentTime, Score);
 	}
 
 	public void JumpToBeat(double beat)
@@ -143,15 +140,15 @@ public partial class Conductor : Node2D
 		SpeedLabel.Text = $"Speed: {SM.Speed}";
 	}
 
-	public void OnNoteHit(int Grade, float pos)
+	public void OnNoteHit(bool success, int dscore, double t, float pos)
 	{
-		if (Grade != 3)
+		if (success)
 			Clicker.Play();
 
-		Score += Grade - (Grade == 3 ? 3 : 0);
+		Score += dscore;
 
 		var splash = splaScene.Instantiate<ComboSplash>();
-		switch (Grade)
+		switch (dscore)
 		{
 			case 2:
 				splash.Grade = "NICE";
@@ -161,7 +158,6 @@ public partial class Conductor : Node2D
 				splash.Grade = "OFF";
 				OffCount++;
 				break;
-			case 3:
 			case 0:
 				splash.Grade = "BAD";
 				BadCount++;
@@ -169,7 +165,7 @@ public partial class Conductor : Node2D
 		}
 
 		Combo++;
-		if (Grade % 3 == 0)
+		if (dscore == 0)
 			Combo = 0;
 		splash.Combo = (Combo > 1 ? $" {Combo.ToString()}" : "");
 

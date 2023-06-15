@@ -1,32 +1,23 @@
 using Godot;
-using System.Collections.Generic;
 
 public partial class ScoreTable : Label
 {
-	List<int> Scores { get; set; }
 	int CurrentScore { get; set; }
 	int MaxScore { get; set; }
-	double finalScore { get; set; }
-	int prevScore { get; set; }
-	double lastNoteTiming { get; set; }
-	MusicSource MS;
-	public void InitReferences(MusicSource _ms)
+	double FinalScore { get; set; }
+	int PrevScore { get; set; }
+	double LastNoteTiming { get; set; }
+
+	public void OnNoteHit(bool success, int dscore, double t, float pos) 
 	{
-		MS = _ms;
-	}
-	public void OnNoteHit(int kek, float rofl) 
-	{
-		if(kek != 3)
+		if (success)
 		{
-			prevScore = CurrentScore;
-			
-			lastNoteTiming = (double)GetTree().GetNodesInGroup("notes")[0].Call("GetTiming");
-			
+			PrevScore = CurrentScore;
+			LastNoteTiming = t;
 		}
 	}
 	public override void _Ready()
 	{
-		Scores = new List<int> {0, 0, 0, 0, 0, 0, 0, 0};
 		CurrentScore = 0;
 		MaxScore = 1;
 	}
@@ -36,28 +27,21 @@ public partial class ScoreTable : Label
 		MaxScore = score;
 	}
 
-	public void UpdateScore(int score)
+	public void UpdateScore(double time, int score)
 	{
 		CurrentScore = score;
-		
-		if(1 - Mathf.Pow(1 - (MS.CurrentTime - lastNoteTiming), 3) <= 1)
-		{
-		finalScore = prevScore + ((1 - Mathf.Pow(1 - (MS.CurrentTime - lastNoteTiming), 3))) * (CurrentScore - prevScore);
-		}
-		
-		
+
+		double t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
+		FinalScore = PrevScore + (CurrentScore - PrevScore) * Mathf.Clamp(t, 0, 1);
 	}
 
 	public int Score()
 	{
-		return Mathf.FloorToInt(finalScore / MaxScore * 1000000);
+		return Mathf.FloorToInt(FinalScore / MaxScore * 1000000);
 	}
 
 	public override void _Process(double delta)
 	{
-		Scores.RemoveAt(0);
-		Scores.Add(CurrentScore);
 		Text = Score().ToString();
-		
 	}
 }

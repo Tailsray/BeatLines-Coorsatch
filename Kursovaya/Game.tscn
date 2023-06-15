@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dods2eunxwjdw" path="res://Covers/StayBlurred.jpg" id="2_v73hu"]
 [ext_resource type="Script" path="res://retryButton.cs" id="3_3rlhy"]
 [ext_resource type="PackedScene" uid="uid://b2f12djjqusn5" path="res://JumpToBeat.tscn" id="5_vobls"]
-[ext_resource type="Script" path="res://iufhsagiufds.cs" id="6_1chj4"]
+[ext_resource type="Script" path="res://DebugFrameCounter.cs" id="6_nfolv"]
 
 [node name="Game" type="Node"]
 script = ExtResource("1_c1mcu")
@@ -51,8 +51,9 @@ script = ExtResource("3_3rlhy")
 [node name="JumpToBeat" parent="." instance=ExtResource("5_vobls")]
 visible = false
 
-[node name="iufhsagiufds" type="Label" parent="."]
+[node name="DebugFrameCounter" type="Label" parent="."]
+visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 theme_override_font_sizes/font_size = 48
-script = ExtResource("6_1chj4")
+script = ExtResource("6_nfolv")

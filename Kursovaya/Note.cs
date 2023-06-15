@@ -3,20 +3,24 @@ using Godot;
 public partial class Note : Sprite2D
 {
 	[Signal]
-	public delegate void NoteHitEventHandler(int deltascore, float pos);
+	public delegate void NoteHitEventHandler(bool missed, int dscore, double t, float pos);
 
 	public int Path1ID { get; set; }
 	public int Path2ID { get; set; }
 	public double MyTime { get; set; }
 	public int TapsToGo { get; set; }
 	int Grade { get; set; }
-	public double timing { get; set; }
+	double timing { get; set; }
 	MusicSource MS;
 	StateMachine SM;
+
 	double pressedTiming { get; set; }
-	public double GetTiming() {
+
+	public double GetTiming()
+	{
 		return pressedTiming;
 	}
+
 	public void InitReferences(StateMachine _sm, MusicSource _ms)
 	{
 		SM = _sm;
@@ -26,17 +30,17 @@ public partial class Note : Sprite2D
 	public void Pressed()
 	{
 		if (Mathf.Abs(timing) <= 0.13)
-		{
-			pressedTiming = MS.CurrentTime;
-			Grade = Grade < GetGrade() ? Grade : GetGrade();
-			Hit(Grade);
-		}
+			Hit(true);
 	}
 
-	void Hit(int grade)
+	void Hit(bool success)
 	{
 		if (--TapsToGo >= 0)
-			EmitSignal("NoteHit", grade, SM.getX((TapsToGo == 0 ? Path1ID : Path2ID), MyTime));
+			EmitSignal("NoteHit",
+							success,
+							GetGrade(),
+							MS.CurrentTime,
+							SM.getX((TapsToGo == 0 ? Path1ID : Path2ID), MyTime));
 		if (TapsToGo == 0)
 			QueueFree();
 	}
@@ -50,7 +54,6 @@ public partial class Note : Sprite2D
 	public override void _Ready()
 	{
 		AddToGroup("notes");
-		Grade = 3;
 	}
 
 	public override void _Process(double delta)
@@ -60,8 +63,8 @@ public partial class Note : Sprite2D
 		if (timing > 0.13)
 		{
 			if (TapsToGo == 2)
-				Hit(3);
-			Hit(3);
+				Hit(false);
+			Hit(false);
 		}
 
 		Position = new Vector2(SM.getX(Path1ID, MyTime),

@@ -2,10 +2,13 @@ using Godot;
 
 public partial class Game : Node
 {
+	[Signal]
+	public delegate void DebugStatusChangedEventHandler(bool isDebugOn);
+
 	StateMachine SM;
 	PackedScene condRes;
 	Conductor cond;
-	private retryButton _retryButton = new retryButton();
+	bool IsDebugOn { get; set; }
 
 	public override void _Ready()
 	{
@@ -14,6 +17,9 @@ public partial class Game : Node
 		AddChild(cond);
 		SM = GetNode<StateMachine>("Conductor/StateMachine");
 		ProcessMode = ProcessModeEnum.Always;
+		IsDebugOn = false;
+
+		DebugStatusChanged += GetNode<DebugFrameCounter>("DebugFrameCounter").ToggleVisibility;
 	}
 
 	async public void ReloadConductor(double startFrom)
@@ -50,7 +56,13 @@ public partial class Game : Node
 			GetTree().Paused = !(GetTree().Paused);
 		}
 
-		if (Input.IsActionJustPressed("debug_jump"))
+		if (Input.IsActionJustPressed("debug_toggle")) // (Shift + D)
+		{
+			IsDebugOn = !IsDebugOn;
+			EmitSignal(SignalName.DebugStatusChanged, IsDebugOn);
+		}
+
+		if (Input.IsActionJustPressed("debug_jump") && IsDebugOn)
 		{
 			GetTree().Paused = true;
 			GetNode<JumpToBeat>("JumpToBeat").Visible = true;
