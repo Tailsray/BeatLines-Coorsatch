@@ -29,7 +29,7 @@ public partial class Conductor : Node2D
 
 	Godot.Collections.Array<Note> notes;
 
-	async public override void _Ready()
+	public override async void _Ready()
 	{
 		AddToGroup("conductor");
 
@@ -108,17 +108,17 @@ public partial class Conductor : Node2D
 		MS.Play();
 	}
 
-	int AsInt(string num)
+	static int AsInt(string num)
 	{
 		return int.Parse(num);
 	}
 
-	float AsFloat(string num)
+	static float AsFloat(string num)
 	{
 		return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
 	}
 
-	double AsDouble(string num)
+	static double AsDouble(string num)
 	{
 		return double.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
 	}
@@ -128,7 +128,7 @@ public partial class Conductor : Node2D
 		ST.UpdateScore(MS.CurrentTime, Score);
 	}
 
-	public void JumpToBeat(double beat)
+	void JumpToBeat(double beat)
 	{
 		MS.Play((float)beat * 60f / MS.BPM);
 	}
@@ -144,7 +144,7 @@ public partial class Conductor : Node2D
 		SpeedLabel.Text = $"Speed: {SM.Speed}";
 	}
 
-	public void OnNoteHit(bool success, int dscore, double t, float pos)
+	void OnNoteHit(bool success, int dscore, double t, float pos)
 	{
 		if (success)
 			Clicker.Play();
@@ -197,7 +197,7 @@ public partial class Conductor : Node2D
 		AddChild(label);
 	}
 
-	async public void WinSplash()
+	async void WinSplash()
 	{
 		await ToSignal(GetTree().CreateTimer(1),
 					   SceneTreeTimer.SignalName.Timeout);

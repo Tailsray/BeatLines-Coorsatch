@@ -7,7 +7,7 @@ public partial class Path : Node2D
 	public int MyID { get; set; }
 	bool FollowerVisible { get; set; } = true;
 	int currentState = -1;
-	public double CurrentTime { get; set; }
+	double CurrentTime { get; set; }
 	StateMachine SM;
 	List<StateMachine.State> states;
 	Vector2[] points;
@@ -18,7 +18,7 @@ public partial class Path : Node2D
 		states = SM.GetStates(MyID);
 	}
 
-	public void UpdateTime(double time)
+	void UpdateTime(double time)
 	{
 		CurrentTime = time;
 	}
@@ -42,7 +42,7 @@ public partial class Path : Node2D
 			follower.Hide();
 		else
 			follower.Show();
-		follower.Position = new Vector2(SM.getX(MyID, CurrentTime), 600f);
+		follower.Position = new Vector2(SM.GetX(MyID, CurrentTime), 600f);
 
 		QueueRedraw();
 	}
@@ -56,12 +56,12 @@ public partial class Path : Node2D
 				DrawChartLine(states[i].t, states[i + 1].t);
 	}
 
-	public void DrawChartLine(double t1, double t2)
+	void DrawChartLine(double t1, double t2)
 	{
 		for (var i = 0; i < points.Length; i++)
 		{
 			var ti = t1 + i / 30.0 * (t2 - t1);
-			points[i] = new Vector2(SM.getX(MyID, ti), SM.getY(ti - CurrentTime));
+			points[i] = new Vector2(SM.GetX(MyID, ti), SM.GetY(ti - CurrentTime));
 		}
 		DrawPolyline(points, Colors.Red, 5, true);
 	}
