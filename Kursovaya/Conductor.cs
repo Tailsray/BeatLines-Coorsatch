@@ -54,10 +54,10 @@ public partial class Conductor : Node2D
 
 		foreach (var t in chart)
 		{
-			var index = AsInt(t[1]);
+			var index = Convert.ToInt32(t[1]);
 
 			if (t[0] == "BPM")
-				MS.BPM = AsFloat(t[1]);
+				MS.BPM = float.Parse(t[1]);
 
 			if (t[0] == "P")
 			{
@@ -74,26 +74,38 @@ public partial class Conductor : Node2D
 				}
 
 				SM.AddState(int.Parse(t[1]),
-							new StateMachine.State(AsDouble(t[2]), AsFloat(t[3]), t[4]));
+					new StateMachine.State(
+						double.Parse(t[2]),
+						float.Parse(t[3]),
+						t[4]));
+								
 			}
 
 			if (t[0] == "N")
 			{
 				var note = noteScene.Instantiate<Note>();
 				AddChild(note);
-				note.NoteHit += ST.OnNoteHit;
+
 				note.NoteHit += OnNoteHit;
+
+				note.Path1ID = index;
 
 				if (t.Count == 4)
 				{
-					note.InitNote(SM, MS, index, AsInt(t[2]), AsDouble(t[3]), 2);
+					note.Path2ID = int.Parse(t[2]);
+					note.MyTime = double.Parse(t[3]);
+					note.TapsToGo = 2;
 					MaxScore += 4;
 				}
 				else
 				{
-					note.InitNote(SM, MS, index, 0, AsDouble(t[2]), 1);
+					note.Path2ID = 0;
+					note.MyTime = double.Parse(t[2]);
+					note.TapsToGo = 1;
 					MaxScore += 2;
 				}
+
+				note.InitReferences(SM, MS);
 			}
 		}
 
@@ -106,26 +118,14 @@ public partial class Conductor : Node2D
 					   SceneTreeTimer.SignalName.Timeout);
 
 		MS.Play();
-	}
 
-	int AsInt(string num)
-	{
-		return int.Parse(num);
-	}
-
-	float AsFloat(string num)
-	{
-		return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
-	}
-
-	double AsDouble(string num)
-	{
-		return double.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
+		// DEBUG - DELETE LATER
+		// MS.Seek(156 * 60f / MS.BPM);
 	}
 
 	public override void _Process(double delta)
 	{
-		ST.UpdateScore(MS.CurrentTime, Score);
+		ST.UpdateScore(Score);
 	}
 
 	public void JumpToBeat(double beat)
@@ -144,15 +144,15 @@ public partial class Conductor : Node2D
 		SpeedLabel.Text = $"Speed: {SM.Speed}";
 	}
 
-	public void OnNoteHit(bool success, int dscore, double t, float pos)
+	public void OnNoteHit(int Grade, float pos)
 	{
-		if (success)
+		if (Grade != 3)
 			Clicker.Play();
 
-		Score += dscore;
+		Score += Grade - (Grade == 3 ? 3 : 0);
 
 		var splash = splaScene.Instantiate<ComboSplash>();
-		switch (dscore)
+		switch (Grade)
 		{
 			case 2:
 				splash.Grade = "NICE";
@@ -162,6 +162,7 @@ public partial class Conductor : Node2D
 				splash.Grade = "OFF";
 				OffCount++;
 				break;
+			case 3:
 			case 0:
 				splash.Grade = "BAD";
 				BadCount++;
@@ -169,7 +170,7 @@ public partial class Conductor : Node2D
 		}
 
 		Combo++;
-		if (dscore == 0)
+		if (Grade % 3 == 0)
 			Combo = 0;
 		splash.Combo = (Combo > 1 ? $" {Combo.ToString()}" : "");
 

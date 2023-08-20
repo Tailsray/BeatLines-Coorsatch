@@ -1,23 +1,15 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class ScoreTable : Label
 {
+	List<int> Scores { get; set; }
 	int CurrentScore { get; set; }
 	int MaxScore { get; set; }
-	double FinalScore { get; set; }
-	int PrevScore { get; set; }
-	double LastNoteTiming { get; set; }
 
-	public void OnNoteHit(bool success, int dscore, double t, float pos) 
-	{
-		if (success)
-		{
-			PrevScore = CurrentScore;
-			LastNoteTiming = t;
-		}
-	}
 	public override void _Ready()
 	{
+		Scores = new List<int> {0, 0, 0, 0, 0, 0, 0, 0};
 		CurrentScore = 0;
 		MaxScore = 1;
 	}
@@ -27,21 +19,28 @@ public partial class ScoreTable : Label
 		MaxScore = score;
 	}
 
-	public void UpdateScore(double time, int score)
+	public void UpdateScore(int score)
 	{
 		CurrentScore = score;
-
-		double t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
-		FinalScore = PrevScore + (CurrentScore - PrevScore) * Mathf.Clamp(t, 0, 1);
 	}
 
-	public int Score()
+	public double Score()
 	{
-		return Mathf.FloorToInt(FinalScore / MaxScore * 1000000);
+		return Mathf.FloorToInt((Scores[0] * 0.05 +
+								 Scores[1] * 0.10 +
+								 Scores[2] * 0.20 +
+								 Scores[3] * 0.35 +
+								 Scores[4] * 0.55 +
+								 Scores[5] * 0.90 +
+								 Scores[6] * 2.00 +
+								 Scores[7] * 3.85) / MaxScore * 125000);
 	}
 
 	public override void _Process(double delta)
 	{
+		Scores.RemoveAt(0);
+		Scores.Add(CurrentScore);
+
 		Text = Score().ToString();
 	}
 }
