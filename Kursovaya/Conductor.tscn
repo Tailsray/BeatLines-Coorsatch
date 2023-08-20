@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://InputProcessor.cs" id="3_24464"]
 [ext_resource type="Script" path="res://StateMachine.cs" id="3_qg4xp"]
 [ext_resource type="Script" path="res://MusicSource.cs" id="4_ubawb"]
-[ext_resource type="AudioStream" uid="uid://b7ftun8wsf2cc" path="res://Music/Stay.mp3" id="5_h44qe"]
+[ext_resource type="AudioStream" uid="uid://b6bjlcj05x21h" path="res://Music/Stay.mp3" id="5_h44qe"]
 [ext_resource type="AudioStream" uid="uid://d3a8c6duuncoy" path="res://Music/Click.mp3" id="6_ld0dr"]
 [ext_resource type="Script" path="res://APFCIndicator.cs" id="7_u3nn2"]
 [ext_resource type="Script" path="res://ScoreTable.cs" id="7_xx0hn"]
@@ -54,3 +54,5 @@ horizontal_alignment = 2
 [node name="APFCIndicator" type="Node2D" parent="."]
 position = Vector2(400, 400)
 script = ExtResource("7_u3nn2")
+
+[connection signal="finished" from="MusicSource" to="." method="OnMusicEnd"]

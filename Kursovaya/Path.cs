@@ -7,7 +7,8 @@ public partial class Path : Node2D
 	public int MyID { get; set; }
 	bool FollowerVisible { get; set; } = true;
 	int currentState = -1;
-	public double CurrentTime { get; set; }
+	const int vertexCount = 20;
+	double CurrentTime { get; set; }
 	StateMachine SM;
 	List<StateMachine.State> states;
 	Vector2[] points;
@@ -18,7 +19,7 @@ public partial class Path : Node2D
 		states = SM.GetStates(MyID);
 	}
 
-	public void UpdateTime(double time)
+	void UpdateTime(double time)
 	{
 		CurrentTime = time;
 	}
@@ -30,7 +31,9 @@ public partial class Path : Node2D
 		follower = ResourceLoader.Load<PackedScene>("res://Follower.tscn").Instantiate<Follower>();
 		AddChild(follower);
 
-		points = new Vector2[31];
+		points = new Vector2[vertexCount + 1];
+
+		QueueRedraw();
 	}
 
 	public override void _Process(double delta)
@@ -42,27 +45,22 @@ public partial class Path : Node2D
 			follower.Hide();
 		else
 			follower.Show();
-		follower.Position = new Vector2(SM.getX(MyID, CurrentTime), 600f);
 
-		QueueRedraw();
+		Position = new Vector2(0, 600f - SM.GetY(CurrentTime));
+		follower.GlobalPosition = new Vector2(SM.GetX(MyID, CurrentTime), 600f);
 	}
 
 	public override void _Draw()
 	{
-		for (var i = (Mathf.Clamp(currentState - 5,  0, states.Count - 1));
-			 i < (Mathf.Clamp(currentState + 20, 0, states.Count - 1));
-			 i++)
+		for (var i = 0; i < states.Count - 1; i++)
 			if (states[i].type != StateMachine.CurveType.End)
-				DrawChartLine(states[i].t, states[i + 1].t);
-	}
-
-	public void DrawChartLine(double t1, double t2)
-	{
-		for (var i = 0; i < points.Length; i++)
-		{
-			var ti = t1 + i / 30.0 * (t2 - t1);
-			points[i] = new Vector2(SM.getX(MyID, ti), SM.getY(ti - CurrentTime));
-		}
-		DrawPolyline(points, Colors.Red, 5, true);
+			{
+				for (var j = 0; j <= vertexCount; j++)
+				{
+					var t = states[i].t + (states[i + 1].t - states[i].t) / vertexCount * j;
+					points[j] = new Vector2(SM.GetX(MyID, t), SM.GetY(t));
+				}
+				DrawPolyline(points, Colors.Red, 5, true);
+			}
 	}
 }

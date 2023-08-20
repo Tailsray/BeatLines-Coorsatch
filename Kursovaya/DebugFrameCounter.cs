@@ -7,8 +7,8 @@ public partial class DebugFrameCounter : Label
 		Text = Engine.GetFramesPerSecond().ToString();
 	}
 
-	public void ToggleVisibility(bool isDebugOn)
+	public void ToggleVisibility()
 	{
-		Visible = isDebugOn;
+		Visible = !Visible;
 	}
 }

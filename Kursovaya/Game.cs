@@ -2,58 +2,70 @@ using Godot;
 
 public partial class Game : Node
 {
+	[Signal]
+	public delegate void PauseButtonPressedEventHandler();
+
 	StateMachine SM;
 	PackedScene condRes;
 	Conductor cond;
-	private retryButton _retryButton = new retryButton();
+
+	public int Speed { get; set; }
 
 	public override void _Ready()
 	{
+		GD.Print("Current Scene: Game");
 		condRes = ResourceLoader.Load<PackedScene>("res://Conductor.tscn");
 		cond = condRes.Instantiate<Conductor>();
 		AddChild(cond);
-		SM = GetNode<StateMachine>("Conductor/StateMachine");
+		SM = cond.GetNode<StateMachine>("StateMachine");
+		SM.Speed = (105 - Mathf.Pow(11 - Speed, 2)) / 20;
+		cond.GetNode<Label>("SpeedLabel").Text = $"Speed: {SM.Speed}";
 		ProcessMode = ProcessModeEnum.Always;
 	}
 
-	async public void ReloadConductor(double startFrom)
+	public void OnResumePressed()
 	{
+		GetNode<PauseMenu>("PauseMenu").Visible = false;
 		GetTree().Paused = false;
-
-		GetNode<ColorRect>("PauseBackground").Visible = false;
-		GetNode<retryButton>("retryButton").Visible = false;
-
+	}
+	
+	public void OnRetryPressed()
+	{
 		GetTree().GetFirstNodeInGroup("conductor").QueueFree();
+		
 		cond = condRes.Instantiate<Conductor>();
 		AddChild(cond);
+		SM = cond.GetNode<StateMachine>("StateMachine");
+		SM.Speed = (105 - Mathf.Pow(11 - Speed, 2)) / 20;
+		cond.GetNode<Label>("SpeedLabel").Text = $"Speed: {SM.Speed}";
 
-		await ToSignal(GetTree().CreateTimer(1),
-					   SceneTreeTimer.SignalName.Timeout);
+		OnResumePressed();
+	}
 
-		GetTree().GetFirstNodeInGroup("conductor").Call("JumpToBeat", startFrom);
+	public void OnRebindPressed()
+	{
+		var reb = ResourceLoader.Load<PackedScene>("res://RebindMenu.tscn").Instantiate<RebindMenu>();
+		AddChild(reb);
+	}
+
+	public void OnExitPressed()
+	{
+		var SongSelectScene = ResourceLoader.Load<PackedScene>("res://SongSelect.tscn").Instantiate<SongSelect>();
+		GetWindow().AddChild(SongSelectScene);
+		QueueFree();
+		GetTree().Paused = false;
 	}
 
 	public override void _UnhandledInput(InputEvent ev)
 	{
-		if (Input.IsActionJustPressed("exit"))
-			GetTree().Quit();
-		
-		if (Input.IsActionJustPressed("restart"))
-		{
-			ReloadConductor(0);
-		}
-
-		if (Input.IsActionJustPressed("pause"))
-		{
-			GetNode<ColorRect>("PauseBackground").Visible = !GetNode<ColorRect>("PauseBackground").Visible;
-			GetNode<retryButton>("retryButton").Visible = !GetNode<retryButton>("retryButton").Visible;
-			GetTree().Paused = !(GetTree().Paused);
-		}
-
-		if (Input.IsActionJustPressed("debug_jump"))
+		if (Input.IsActionJustPressed("pause") && !GetTree().Paused)
 		{
 			GetTree().Paused = true;
-			GetNode<JumpToBeat>("JumpToBeat").Visible = true;
+			GetNode<PauseMenu>("PauseMenu").Visible = true;
+			EmitSignal(SignalName.PauseButtonPressed);
 		}
+
+		if (Input.IsActionJustPressed("toggle_frame_counter"))
+			GetNode<DebugFrameCounter>("DebugFrameCounter").ToggleVisibility();
 	}
 }

@@ -4,17 +4,15 @@ public partial class ScoreTable : Label
 {
 	int CurrentScore { get; set; }
 	int MaxScore { get; set; }
-	double FinalScore { get; set; }
+	double DisplayScore { get; set; }
 	int PrevScore { get; set; }
 	double LastNoteTiming { get; set; }
 
-	public void OnNoteHit(bool success, int dscore, double t, float pos) 
+	public void OnNoteHit(bool success, int dscore, double t, float pos)
 	{
-		if (success)
-		{
-			PrevScore = CurrentScore;
-			LastNoteTiming = t;
-		}
+		if (!success) return;
+		PrevScore = CurrentScore;
+		LastNoteTiming = t;
 	}
 	public override void _Ready()
 	{
@@ -31,13 +29,13 @@ public partial class ScoreTable : Label
 	{
 		CurrentScore = score;
 
-		double t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
-		FinalScore = PrevScore + (CurrentScore - PrevScore) * Mathf.Clamp(t, 0, 1);
+		var t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
+		DisplayScore = PrevScore + (CurrentScore - PrevScore) * Mathf.Clamp(t, 0, 1);
 	}
 
 	public int Score()
 	{
-		return Mathf.FloorToInt(FinalScore / MaxScore * 1000000);
+		return Mathf.FloorToInt(DisplayScore / MaxScore * 1000000);
 	}
 
 	public override void _Process(double delta)

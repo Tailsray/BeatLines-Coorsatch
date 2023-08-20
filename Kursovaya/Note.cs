@@ -35,11 +35,11 @@ public partial class Note : Sprite2D
 	void Hit(bool success)
 	{
 		if (--TapsToGo >= 0)
-			EmitSignal("NoteHit",
+			EmitSignal(SignalName.NoteHit,
 							success,
 							GetGrade(),
 							MS.CurrentTime,
-							SM.getX((TapsToGo == 0 ? Path1ID : Path2ID), MyTime));
+							SM.GetX((TapsToGo == 0 ? Path1ID : Path2ID), MyTime));
 		if (TapsToGo == 0)
 			QueueFree();
 	}
@@ -66,8 +66,8 @@ public partial class Note : Sprite2D
 			Hit(false);
 		}
 
-		Position = new Vector2(SM.getX(Path1ID, MyTime),
-							   SM.getY(MyTime - MS.CurrentTime));
+		Position = new Vector2(SM.GetX(Path1ID, MyTime),
+							   SM.GetY(MyTime - MS.CurrentTime));
 	}
 
 	public override void _Draw()
@@ -79,7 +79,7 @@ public partial class Note : Sprite2D
 		}
 		else
 		{
-			var x2 = SM.getX(Path2ID, MyTime) - SM.getX(Path1ID, MyTime);
+			var x2 = SM.GetX(Path2ID, MyTime) - SM.GetX(Path1ID, MyTime);
 
 			DrawCircle(new Vector2(), 25, Colors.Gold);
 			DrawCircle(new Vector2(), 22, Colors.Black);

@@ -4,8 +4,12 @@ using System.Collections.Generic;
 
 public partial class Conductor : Node2D
 {
-	[Signal]
-	public delegate void ChartIsReadEventHandler();
+	enum ChartState
+	{
+		Loading,
+		Started,
+		Finished
+	}
 
 	int PathIDCounter { get; set; }
 	int MaxScore { get; set; }
@@ -15,21 +19,19 @@ public partial class Conductor : Node2D
 	int Score { get; set; }
 	int Combo { get; set; }
 	string chartPath = "res://Charts/Stay3.chrt";
+	ChartState chartState = ChartState.Loading;
 	List<List<string>> chart;
 	StateMachine SM;
-	InputProcessor IP;
 	MusicSource MS;
 	ScoreTable ST;
-	Label SpeedLabel;
+	public Label SpeedLabel;
 	AudioStreamPlayer Clicker;
 	APFCIndicator indicator;
 	PackedScene noteScene;
 	PackedScene pathScene;
 	PackedScene splaScene;
 
-	Godot.Collections.Array<Note> notes;
-
-	async public override void _Ready()
+	public override void _Ready()
 	{
 		AddToGroup("conductor");
 
@@ -99,52 +101,38 @@ public partial class Conductor : Node2D
 
 		ST.SetMaxScore(MaxScore);
 
-		IP = GetNode<InputProcessor>("InputProcessor");
-		IP.ChartOver += WinSplash;
-
-		await ToSignal(GetTree().CreateTimer(1),
-					   SceneTreeTimer.SignalName.Timeout);
-
 		MS.Play();
+		chartState = ChartState.Started;
 	}
 
-	int AsInt(string num)
+	static int AsInt(string num)
 	{
 		return int.Parse(num);
 	}
 
-	float AsFloat(string num)
+	static float AsFloat(string num)
 	{
 		return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
 	}
 
-	double AsDouble(string num)
+	static double AsDouble(string num)
 	{
 		return double.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
 	}
 
 	public override void _Process(double delta)
 	{
-		ST.UpdateScore(MS.CurrentTime, Score);
+		if (chartState == ChartState.Started)
+			ST.UpdateScore(MS.CurrentTime, Score);
 	}
 
-	public void JumpToBeat(double beat)
+	public void OnMusicEnd()
 	{
-		MS.Play((float)beat * 60f / MS.BPM);
+		chartState = ChartState.Finished;
+		WinSplash();
 	}
 
-	public override void _UnhandledInput(InputEvent ev)
-	{
-		if (Input.IsActionJustPressed("speed_up"))
-			SM.Speed += 0.5f;
-		
-		if (Input.IsActionJustPressed("speed_down"))
-			SM.Speed -= 0.5f;
-
-		SpeedLabel.Text = $"Speed: {SM.Speed}";
-	}
-
-	public void OnNoteHit(bool success, int dscore, double t, float pos)
+	void OnNoteHit(bool success, int dscore, double t, float pos)
 	{
 		if (success)
 			Clicker.Play();
@@ -197,7 +185,7 @@ public partial class Conductor : Node2D
 		AddChild(label);
 	}
 
-	async public void WinSplash()
+	async void WinSplash()
 	{
 		await ToSignal(GetTree().CreateTimer(1),
 					   SceneTreeTimer.SignalName.Timeout);
