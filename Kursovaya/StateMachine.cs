@@ -5,7 +5,7 @@ public partial class StateMachine : Node
 {
 	public List<List<State>> states;
 	public float Speed { get; set; }
-    const float BeatLength = 150f;
+    const float beatLength = 150f;
 
 	public override void _Ready()
 	{
@@ -29,14 +29,16 @@ public partial class StateMachine : Node
 
 	static CurveType Parse(string s)
 	{
-		return s switch
-		{
-			"S" => StateMachine.CurveType.Straight,
-			"A" => StateMachine.CurveType.CircleAccel,
-			"D" => StateMachine.CurveType.CircleDecel,
-			"E" => StateMachine.CurveType.End,
-			_ => StateMachine.CurveType.None
-		};
+		if (s == "S")
+			return StateMachine.CurveType.Straight;
+		if (s == "A")
+			return StateMachine.CurveType.CircleAccel;
+		if (s == "D")
+			return StateMachine.CurveType.CircleDecel;
+		if (s == "E")
+			return StateMachine.CurveType.End;
+
+		return StateMachine.CurveType.None;
 	}
 
 	public partial class State : GodotObject
@@ -68,12 +70,12 @@ public partial class StateMachine : Node
 		return states[id - 1];
 	}
 
-	public float GetX(int index, double time)
+	public float getX(int index, double time)
 	{
 		var s = states[index - 1];
 
 		if (!(time >= s[0].t) || !(time <= s[^1].t)) return -1000;
-		var i = 0;
+		int i = 0;
 		while (time > s[i + 1].t) i++;
 		if (s[i].type == CurveType.End) i++;
 
@@ -87,8 +89,8 @@ public partial class StateMachine : Node
 		};
 	}
 
-	public float GetY(double t)
+	public float getY(double t)
 	{
-		return 600f - Speed * BeatLength * (float)t;
+		return 600f - Speed * beatLength * (float)t;
 	}
 }

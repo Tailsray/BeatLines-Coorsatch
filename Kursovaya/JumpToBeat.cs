@@ -16,10 +16,10 @@ public partial class JumpToBeat : SpinBox
 	public override void _UnhandledInput(InputEvent ev)
 	{
 		if (ev is InputEventKey key && key.Keycode == Key.Enter)
-			Value = float.Parse(GetLineEdit().Text);
+			Value = Single.Parse(GetLineEdit().Text);
 	}
 
-	void OnValueChanged(double value)
+	public void OnValueChanged(double value)
 	{
 		GetTree().Paused = false;
 		GetParent<Game>().ReloadConductor(value);		

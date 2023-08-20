@@ -22,7 +22,7 @@ public partial class Game : Node
 		DebugStatusChanged += GetNode<DebugFrameCounter>("DebugFrameCounter").ToggleVisibility;
 	}
 
-	public async void ReloadConductor(double startFrom)
+	async public void ReloadConductor(double startFrom)
 	{
 		GetTree().Paused = false;
 

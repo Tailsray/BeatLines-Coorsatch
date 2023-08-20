@@ -8,11 +8,13 @@ public partial class ScoreTable : Label
 	int PrevScore { get; set; }
 	double LastNoteTiming { get; set; }
 
-	public void OnNoteHit(bool success, int dscore, double t, float pos)
+	public void OnNoteHit(bool success, int dscore, double t, float pos) 
 	{
-		if (!success) return;
-		PrevScore = CurrentScore;
-		LastNoteTiming = t;
+		if (success)
+		{
+			PrevScore = CurrentScore;
+			LastNoteTiming = t;
+		}
 	}
 	public override void _Ready()
 	{
@@ -29,7 +31,7 @@ public partial class ScoreTable : Label
 	{
 		CurrentScore = score;
 
-		var t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
+		double t = 1 - Mathf.Pow(1 - (time - LastNoteTiming), 3);
 		FinalScore = PrevScore + (CurrentScore - PrevScore) * Mathf.Clamp(t, 0, 1);
 	}
 
