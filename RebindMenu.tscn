@@ -1,0 +1,155 @@
+[gd_scene load_steps=3 format=3 uid="uid://qelc36hauj7q"]
+
+[ext_resource type="Script" path="res://RebindMenu.cs" id="1_nnil4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nso5u"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="RebindMenu" type="PanelContainer"]
+z_index = 3
+offset_right = 800.0
+offset_bottom = 800.0
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_nso5u")
+script = ExtResource("1_nnil4")
+
+[node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="KeyLabels" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Key1LabelMargin" type="MarginContainer" parent="UI/KeyLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_bottom = 30
+
+[node name="Key1Label" type="Label" parent="UI/KeyLabels/Key1LabelMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 40
+text = "Key 1"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Key2LabelMargin" type="MarginContainer" parent="UI/KeyLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_bottom = 30
+
+[node name="Key2Label" type="Label" parent="UI/KeyLabels/Key2LabelMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 40
+text = "Key 2"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Key3LabelMargin" type="MarginContainer" parent="UI/KeyLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_bottom = 30
+
+[node name="Key3Label" type="Label" parent="UI/KeyLabels/Key3LabelMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 40
+text = "Key 3"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Key4LabelMargin" type="MarginContainer" parent="UI/KeyLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_bottom = 30
+
+[node name="Key4Label" type="Label" parent="UI/KeyLabels/Key4LabelMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 40
+text = "Key 4"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="KeyButtons" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Key1ButtonMargin" type="MarginContainer" parent="UI/KeyButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 110
+
+[node name="Key1Button" type="Button" parent="UI/KeyButtons/Key1ButtonMargin"]
+layout_mode = 2
+focus_neighbor_left = NodePath("../../Key4ButtonMargin/Key4Button")
+focus_neighbor_right = NodePath("../../Key2ButtonMargin/Key2Button")
+theme_override_font_sizes/font_size = 30
+
+[node name="Key2ButtonMargin" type="MarginContainer" parent="UI/KeyButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 110
+
+[node name="Key2Button" type="Button" parent="UI/KeyButtons/Key2ButtonMargin"]
+layout_mode = 2
+focus_neighbor_left = NodePath("../../Key1ButtonMargin/Key1Button")
+focus_neighbor_right = NodePath("../../Key3ButtonMargin/Key3Button")
+theme_override_font_sizes/font_size = 30
+
+[node name="Key3ButtonMargin" type="MarginContainer" parent="UI/KeyButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 110
+
+[node name="Key3Button" type="Button" parent="UI/KeyButtons/Key3ButtonMargin"]
+layout_mode = 2
+focus_neighbor_left = NodePath("../../Key2ButtonMargin/Key2Button")
+focus_neighbor_right = NodePath("../../Key4ButtonMargin/Key4Button")
+theme_override_font_sizes/font_size = 30
+
+[node name="Key4ButtonMargin" type="MarginContainer" parent="UI/KeyButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 110
+
+[node name="Key4Button" type="Button" parent="UI/KeyButtons/Key4ButtonMargin"]
+layout_mode = 2
+focus_neighbor_left = NodePath("../../Key3ButtonMargin/Key3Button")
+focus_neighbor_right = NodePath("../../Key1ButtonMargin/Key1Button")
+theme_override_font_sizes/font_size = 30
+
+[node name="HelpText" type="Label" parent="UI"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+theme_override_font_sizes/font_size = 40
+text = "Left/Right: Choose
+Enter: Edit
+Esc: Save and exit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="UI/KeyButtons/Key1ButtonMargin/Key1Button" to="." method="BindKey" binds= [1]]
+[connection signal="pressed" from="UI/KeyButtons/Key2ButtonMargin/Key2Button" to="." method="BindKey" binds= [2]]
+[connection signal="pressed" from="UI/KeyButtons/Key3ButtonMargin/Key3Button" to="." method="BindKey" binds= [3]]
+[connection signal="pressed" from="UI/KeyButtons/Key4ButtonMargin/Key4Button" to="." method="BindKey" binds= [4]]

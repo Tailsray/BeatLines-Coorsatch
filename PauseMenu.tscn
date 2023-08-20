@@ -1,0 +1,98 @@
+[gd_scene load_steps=3 format=3 uid="uid://gqnfxe1mxt7c"]
+
+[ext_resource type="Script" path="res://PauseMenu.cs" id="1_qimnj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nso5u"]
+bg_color = Color(0, 0, 0, 0.501961)
+
+[node name="PauseMenu" type="PanelContainer"]
+offset_right = 800.0
+offset_bottom = 800.0
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_nso5u")
+script = ExtResource("1_qimnj")
+
+[node name="ButtonBoxes" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="ResumeBox" type="MarginContainer" parent="ButtonBoxes"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 245.0
+focus_neighbor_top = NodePath("../ExitBox")
+focus_neighbor_bottom = NodePath("../RetryBox")
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 165
+theme_override_constants/margin_right = 200
+
+[node name="ResumeButton" type="Button" parent="ButtonBoxes/ResumeBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../ExitBox/ExitButton")
+focus_neighbor_bottom = NodePath("../../RetryBox/RetryButton")
+theme_override_font_sizes/font_size = 40
+disabled = true
+button_mask = 0
+keep_pressed_outside = true
+text = "RESUME"
+
+[node name="RetryBox" type="MarginContainer" parent="ButtonBoxes"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 180.0
+focus_neighbor_top = NodePath("../ResumeBox")
+focus_neighbor_bottom = NodePath("../RebindBox")
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 50
+
+[node name="RetryButton" type="Button" parent="ButtonBoxes/RetryBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../ResumeBox/ResumeButton")
+focus_neighbor_bottom = NodePath("../../RebindBox/RebindButton")
+theme_override_font_sizes/font_size = 40
+disabled = true
+button_mask = 0
+keep_pressed_outside = true
+text = "RETRY"
+
+[node name="RebindBox" type="MarginContainer" parent="ButtonBoxes"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 130.0
+focus_neighbor_top = NodePath("../RetryBox")
+focus_neighbor_bottom = NodePath("../ExitBox")
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 50
+
+[node name="RebindButton" type="Button" parent="ButtonBoxes/RebindBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../RetryBox/RetryButton")
+focus_neighbor_bottom = NodePath("../../ExitBox/ExitButton")
+theme_override_font_sizes/font_size = 40
+disabled = true
+button_mask = 0
+keep_pressed_outside = true
+text = "REBIND"
+
+[node name="ExitBox" type="MarginContainer" parent="ButtonBoxes"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 245.0
+focus_neighbor_top = NodePath("../RebindBox")
+focus_neighbor_bottom = NodePath("../ResumeBox")
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 165
+
+[node name="ExitButton" type="Button" parent="ButtonBoxes/ExitBox"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../RebindBox/RebindButton")
+focus_neighbor_bottom = NodePath("../../ResumeBox/ResumeButton")
+theme_override_font_sizes/font_size = 40
+disabled = true
+button_mask = 0
+keep_pressed_outside = true
+text = "EXIT"

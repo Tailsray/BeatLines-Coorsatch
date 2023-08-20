@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckwmym4o7ta5l"]
+
+[ext_resource type="Script" path="res://Note.cs" id="1_lbrxc"]
+
+[node name="Note" type="Sprite2D"]
+script = ExtResource("1_lbrxc")

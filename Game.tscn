@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dsy5c7yu8lpju"]
+
+[ext_resource type="Script" path="res://Game.cs" id="1_c1mcu"]
+[ext_resource type="Texture2D" uid="uid://c51c5kybajaf" path="res://Covers/StayBlurred.jpg" id="2_v73hu"]
+[ext_resource type="Script" path="res://DebugFrameCounter.cs" id="6_nfolv"]
+[ext_resource type="PackedScene" uid="uid://gqnfxe1mxt7c" path="res://PauseMenu.tscn" id="7_lciqc"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_c1mcu")
+metadata/_edit_horizontal_guides_ = [-507.0]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 800.0
+offset_bottom = 800.0
+texture = ExtResource("2_v73hu")
+expand_mode = 4
+
+[node name="DebugFrameCounter" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 48
+script = ExtResource("6_nfolv")
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_lciqc")]
+visible = false
+z_index = 2
+
+[connection signal="PauseButtonPressed" from="." to="PauseMenu" method="OnPaused"]
+[connection signal="pressed" from="PauseMenu/ButtonBoxes/ResumeBox/ResumeButton" to="." method="OnResumePressed"]
+[connection signal="pressed" from="PauseMenu/ButtonBoxes/RetryBox/RetryButton" to="." method="OnRetryPressed"]
+[connection signal="pressed" from="PauseMenu/ButtonBoxes/RebindBox/RebindButton" to="." method="OnRebindPressed"]
+[connection signal="pressed" from="PauseMenu/ButtonBoxes/ExitBox/ExitButton" to="." method="OnExitPressed"]
+
+[editable path="PauseMenu"]
